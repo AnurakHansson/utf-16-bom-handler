@@ -25,3 +25,10 @@ The trade-off is scope: this handles only UTF-16 BOMs and byte-order conversion.
 ## Awkward edge
 
 `convertEncoding` throws a `RangeError` on odd-length input because UTF-16 code units are always two bytes. An odd-length buffer cannot be valid UTF-16, so treating it as silently convertible would hide a data corruption bug.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
